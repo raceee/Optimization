@@ -1,6 +1,5 @@
 import numpy as np
 from numpy import linalg as LA
-
 epsilon = 10 ** -8
 N = 1000
 Max_LS_iter = 20
@@ -8,7 +7,22 @@ mu = 10 ** -4
 v = 0.9
 y = 10 ** -4
 
-parameters = [epsilon, N, Max_LS_iter, mu, v, y]
+
+def function(num1, num2, c):
+    return ((num1 - 1) ** 2) + ((num2 -1) ** 2) + (c *((num1 ** 2) + (num2 ** 2) - 0.25))
+def gradient(num1, num2, c):
+    a = ((4 * (num1 ** 3) * c) + (4*c * num1 * (num2 ** 2)) + (2 * num1) - (num1 * c)) - 2
+    b = ((4 * (num2 ** 3) * c) + (4*c * (num1 ** 2) * num2) + (2 * num2) - (num2 * c)) - 2
+    return np.array([a,b])
+
+def hessian(num1, num2, c):
+    a = (12 * (num1 ** 2) * c) + (4 * c * (num2 ** 2)) + 2 - c
+    b = 8 * c * num1 * num2
+    c = 8 * c * num1 * num2
+    d = (12 * (num2 ** 2) * c) + (4 * c * (num1 ** 2)) + 2 - c
+    return np.array([[a,b],[c,d]])
+
+
 
 
 def backtracking(mu, p_k, x_k, Max_LS_iter=20):
@@ -21,21 +35,6 @@ def backtracking(mu, p_k, x_k, Max_LS_iter=20):
         n += 1
         print(n)
     return alpha
-
-def gradient_descent(function_value_list, epsilon, N, Max_LS_iter, mu, v, y, gradient_value_list, x0):
-    k = 0
-    x_k = x0
-    while LA.norm(gradient(x_k)) / (1 + abs(function(x_k)) > epsilon) and k <= N:  #figure out gradient information on how to plug stuff into it
-        p_k = -gradient(x_k)
-        alpha = backtracking(mu, v, y, p_k, x_k)
-        x_k = x_k + (alpha * p_k)
-        k += 1
-    if k > N:
-        print("Number of iterations exceeded limit *N", N)
-        return x_k, function(x_k), k
-    else:
-        return x_k, function(x_k), k
-
 
 def modified_newton(x0, epsilon=10 ** -8, N=1000, Max_LS_iter=20, mu=10 ** -4, v=0.9, y=10 ** -4):
     k = 0
@@ -65,17 +64,10 @@ def modified_newton(x0, epsilon=10 ** -8, N=1000, Max_LS_iter=20, mu=10 ** -4, v
         print("hi")
     return x_k, function(x_k[0],x_k[1],c), k
 
-def quasi():
-    k = 0
-    x_k = x0
-    b_k = np.identity() #acceptable dimensions
+x0 = np.array([1,-1])
+c = int(input("Enter C Value: "))
+print(modified_newton(x0))
 
-    for i in range(N):
-        p_k = LA.solve(b_k, (-1 * gradient(x_k)))
-        alpha = backtracking(epsilon, N, Max_LS_iter, mu, v, y, p_k, x_k)
-        x_k1 = x_k + (alpha * p_k)
-        s_k = x_k1 - x_k
-        y_k = gradient(x_k1) - gradient(x_k)
-        b_k = b_k - (np.matmul(b_k, s_k) * np.matmul(b_k, s_k).transpose())/ (s_k.transpose() * np.matmul(b_k, s_k))
-        b_k = b_k + (np.matmul(y_k, y_k.transpose()))/np.matmul(y_k.transpose(), s_k)
-    return x_k, function(x_k), k
+# c = 1 (array([ 0.55833181, -1.06334484]), 5.644899351245723, 1001)
+# c = 10 (array([ 0.16172262, -1.09017924]), 14.718008106821928, 1001)
+# c = 100 (array([ 0.14194704, -1.07904102]), 98.50651403324103, 1001)

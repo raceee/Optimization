@@ -42,10 +42,16 @@ def hessian3():
 
 def function4():
     return (((num1 + num2) ** 4) + (num2 ** 2))
-def gradient4():
-    return
+def gradient4(num1, num2):
+    a = (4 * (num1 + num2) ** 3)
+    b = (4 * (num1 + num2) **3) + 2 * num2
+    return np.array([a,b])
 def hessian4():
-    return
+    a = (num1 + num2) **2
+    b = (num1 + num2) **2
+    c = (num1 + num2) **2
+    d = (num1 + num2) **2 + (1/6)
+    return np.array([a,b],[c,d])
 
 
 def function5(num1, num2, c):
