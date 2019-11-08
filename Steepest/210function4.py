@@ -50,5 +50,9 @@ def gradient_descent(x0, epsilon=10 ** -8, N=1000, Max_LS_iter=20, mu=10 ** -4, 
 x0 = np.array([2,-2])
 print(gradient_descent(x0))
 
+x_k_out, fx_k, k = gradient_descent(x0)
+
+print("x_k = {}, function at x_k = {}, iterations = {}".format(x_k_out,fx_k, k))
+#output
 # Number of iterations exceeded limit:  1000
-# (array([ 2.        , -1.99809165]), 3.992370258345243, 1001)
+# x_k = [ 2.         -1.99809165], function at x_k = 3.992370258345243, iterations = 1001

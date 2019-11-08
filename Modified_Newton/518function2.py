@@ -61,4 +61,8 @@ def modified_newton(x0, epsilon=10 ** -8, N=1000, Max_LS_iter=20, mu=10 ** -4, v
 
 x0 = np.array([0,0])
 
-print(modified_newton(x0))
+x_k_out, fx_k, k = modified_newton(x0)
+
+print("x_k = {}, function at x_k = {}, iterations = {}".format(x_k_out,fx_k, k))
+#output
+# x_k = [1. 1.], function at x_k = -1.0, iterations = 1

@@ -50,6 +50,9 @@ def gradient_descent(x0, epsilon=10 ** -8, N=1000, Max_LS_iter=20, mu=10 ** -4, 
         return x_k, function(x_k[0], x_k[1]), k
 
 x0 = np.array([-1.2,1])
-print(gradient_descent(x0))
 
-#(array([-3.93452837e+09,  9.17576100e+06]), -2.396462970737467e+40, 2)
+x_k_out, fx_k, k = gradient_descent(x0)
+
+print("x_k = {}, function at x_k = {}, iterations = {}".format(x_k_out,fx_k, k))
+#output
+# x_k = [-3.93452837e+09  9.17576100e+06], function at x_k = -2.396462970737467e+40, iterations = 2
