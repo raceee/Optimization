@@ -40,7 +40,7 @@ def quasi(x0, epsilon = 10 ** -8, N = 1000, Max_LS_iter = 20, mu = 10 ** -4, v =
     k = 0
     x_k = x0
     b_k = np.identity(2, dtype="float") #acceptable dimensions
-
+    data = [['iteration', 'norm of gradient', 'step size', 'x_k']]
     while k <= N:
         p_k = LA.solve(b_k, (-1 * gradient(x_k[0], x_k[1])))
         print("p_k = ", p_k)
@@ -61,13 +61,34 @@ def quasi(x0, epsilon = 10 ** -8, N = 1000, Max_LS_iter = 20, mu = 10 ** -4, v =
         b_k = np.subtract(b_k, (ab * np.identity(2, dtype="float")))
         x_k = x_k1
         k += 1
-        print(k)
-    return x_k, function(x_k[0], x_k[1]), k
+        data.append([k, LA.norm(gradient(x_k[0], x_k[1])), alpha, x_k])
+    return data
 
 x0 = np.array([-1.2,1])
+data = quasi(x0)
+if len(data) > 15:
+    a = data[0:11]
+    a.extend(data[len(data) - 6:len(data) - 1])
+    for item in a:
+        print(item)
+else:
+    for item in data:
+        print(item)
 
-x_k_out, fx_k, k = quasi(x0)
-
-print("x_k = {}, function at x_k = {}, iterations = {}".format(x_k_out,fx_k, k))
-#output
-# in calculation of b this approaches infinity at iteration 313 and has an overflow crash
+#I couldn't figure out what was going on here
+# ['iteration', 'norm of gradient', 'step size', 'x_k']
+# [1, 0.6957866626446327, 4.76837158203125e-07, array([-1.19999974,  1.00000021])]
+# [2, 1.4612527099196073, 1, array([-1.32936586,  0.8943952 ])]
+# [3, 3.3880532927407785, 1, array([-1.58368573,  0.70498727])]
+# [4, 8.649818661197637, 1, array([-2.04929923,  0.41230514])]
+# [5, 24.339602108072235, 1, array([-2.84452848,  0.02501657])]
+# [6, 73.32409793819745, 1, array([-4.11137257, -0.41997235])]
+# [7, 228.3629654732055, 1, array([-6.03588169, -0.88789851])]
+# [8, 719.5444330647788, 1, array([-8.89123148, -1.36088722])]
+# [9, 2272.774688658043, 1, array([-13.08837241,  -1.83290852])]
+# [10, 7175.788217185794, 1, array([-19.23954161,  -2.30286596])]
+# [996, nan, 1, array([nan, nan])]
+# [997, nan, 1, array([nan, nan])]
+# [998, nan, 1, array([nan, nan])]
+# [999, nan, 1, array([nan, nan])]
+# [1000, nan, 1, array([nan, nan])]

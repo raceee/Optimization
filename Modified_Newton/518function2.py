@@ -33,6 +33,7 @@ def backtracking(mu, p_k, x_k, Max_LS_iter=20):
     return alpha
 
 def modified_newton(x0, epsilon=10 ** -8, N=1000, Max_LS_iter=20, mu=10 ** -4, v=0.9, y=10 ** -4):
+    data = [['iteration', 'norm of gradient', 'step size', 'x_k']]
     k = 0
     x_k = x0
     h = hessian()
@@ -56,13 +57,22 @@ def modified_newton(x0, epsilon=10 ** -8, N=1000, Max_LS_iter=20, mu=10 ** -4, v
         x_k = x_k + alpha * p_k
         k += 1
         h = hessian()
-        print("hi")
-    return x_k, function(x_k[0],x_k[1]), k
+        data.append([k, LA.norm(gradient(x_k[0], x_k[1])), alpha, x_k])
+    return data
 
 x0 = np.array([0,0])
+data = modified_newton(x0)
+if len(data) > 15:
+    a = data[0:11]
+    a.extend(data[len(data) - 6:len(data) - 1])
+    for item in a:
+        print(a)
+else:
+    for item in data:
+        print(item)
 
-x_k_out, fx_k, k = modified_newton(x0)
 
-print("x_k = {}, function at x_k = {}, iterations = {}".format(x_k_out,fx_k, k))
-#output
-# x_k = [1. 1.], function at x_k = -1.0, iterations = 1
+
+# output
+# ['iteration', 'norm of gradient', 'step size', 'x_k']
+# [1, 0.0, 1, array([1., 1.])]

@@ -34,6 +34,7 @@ def backtracking(mu, p_k, x_k, Max_LS_iter=20):
     return alpha
 
 def gradient_descent(x0, epsilon=10 ** -8, N=1000, Max_LS_iter=20, mu=10 ** -4, v=0.9, y=10 ** -4):
+    data = [['iteration', 'norm of gradient', 'step size', 'x_k']]
     k = 0
     x_k = x0
     while (LA.norm(gradient(x_k[0], x_k[1]),2) / (1 + abs(function(x_k[0], x_k[1])))) > epsilon and k <= N:  #figure out gradient information on how to plug stuff into it
@@ -41,18 +42,37 @@ def gradient_descent(x0, epsilon=10 ** -8, N=1000, Max_LS_iter=20, mu=10 ** -4, 
         alpha = backtracking(mu, p_k, x_k)
         x_k = x_k + (alpha * p_k)
         k += 1
+        data.append([k, LA.norm(gradient(x_k[0], x_k[1])), alpha, x_k])
     if k > N:
         print("Number of iterations exceeded limit: ", N)
-        return x_k, function(x_k[0], x_k[1]), k
+        return data
     else:
-        return x_k, function(x_k[0], x_k[1]), k
+        return data
 
 x0 = np.array([2,-2])
-print(gradient_descent(x0))
+data = gradient_descent(x0)
+if len(data) > 15:
+    a = data[0:11]
+    a.extend(data[len(data) - 6:len(data) - 1])
+    for item in a:
+        print(item)
+else:
+    for item in data:
+        print(item)
 
-x_k_out, fx_k, k = gradient_descent(x0)
-
-print("x_k = {}, function at x_k = {}, iterations = {}".format(x_k_out,fx_k, k))
-#output
-# Number of iterations exceeded limit:  1000
-# x_k = [ 2.         -1.99809165], function at x_k = 3.992370258345243, iterations = 1001
+# ['iteration', 'norm of gradient', 'step size', 'x_k']
+# [1, 3.9999961853027344, 4.76837158203125e-07, array([ 2.        , -1.99999809])]
+# [2, 3.9999923706091067, 4.76837158203125e-07, array([ 2.        , -1.99999619])]
+# [3, 3.999988555919116, 4.76837158203125e-07, array([ 2.        , -1.99999428])]
+# [4, 3.9999847412327636, 4.76837158203125e-07, array([ 2.        , -1.99999237])]
+# [5, 3.999980926550048, 4.76837158203125e-07, array([ 2.        , -1.99999046])]
+# [6, 3.99997711187097, 4.76837158203125e-07, array([ 2.        , -1.99998856])]
+# [7, 3.999973297195529, 4.76837158203125e-07, array([ 2.        , -1.99998665])]
+# [8, 3.999969482523724, 4.76837158203125e-07, array([ 2.        , -1.99998474])]
+# [9, 3.999965667855556, 4.76837158203125e-07, array([ 2.        , -1.99998283])]
+# [10, 3.9999618531910253, 4.76837158203125e-07, array([ 2.        , -1.99998093])]
+# [996, 3.9962023362304984, 4.76837158203125e-07, array([ 2.        , -1.99810118])]
+# [997, 3.996198525072439, 4.76837158203125e-07, array([ 2.        , -1.99809928])]
+# [998, 3.996194713917849, 4.76837158203125e-07, array([ 2.        , -1.99809737])]
+# [999, 3.9961909027667275, 4.76837158203125e-07, array([ 2.        , -1.99809547])]
+# [1000, 3.996187091619075, 4.76837158203125e-07, array([ 2.        , -1.99809356])]

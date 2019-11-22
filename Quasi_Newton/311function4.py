@@ -37,7 +37,7 @@ def quasi(x0, epsilon = 10 ** -8, N = 1000, Max_LS_iter = 20, mu = 10 ** -4, v =
     k = 0
     x_k = x0
     b_k = np.identity(2, dtype="float") #acceptable dimensions
-
+    data = [['iteration', 'norm of gradient', 'step size', 'x_k']]
     while k <= N:
         p_k = LA.solve(b_k, (-1 * gradient(x_k[0], x_k[1])))
         print("p_k = ", p_k)
@@ -58,13 +58,33 @@ def quasi(x0, epsilon = 10 ** -8, N = 1000, Max_LS_iter = 20, mu = 10 ** -4, v =
         b_k = np.subtract(b_k, (ab * np.identity(2, dtype="float")))
         x_k = x_k1
         k += 1
-        print(k)
-    return x_k, function(x_k[0], x_k[1]), k
-
+        data.append([k, LA.norm(gradient(x_k[0], x_k[1])), alpha, x_k])
+    return data
 x0 = np.array([2,-2])
+data = quasi(x0)
+if len(data) > 15:
+    a = data[0:11]
+    a.extend(data[len(data) - 6:len(data) - 1])
+    for item in a:
+        print(item)
+else:
+    for item in data:
+        print(item)
 
-x_k_out, fx_k, k = quasi(x0)
 
-print("x_k = {}, function at x_k = {}, iterations = {}".format(x_k_out,fx_k, k))
-#output
-#x_k = [ 2.         -2.00095199], function at x_k = 4.003808872368753, iterations = 1001
+# ['iteration', 'norm of gradient', 'step size', 'x_k']
+# [1, 3.9999961853027344, 4.76837158203125e-07, array([ 2.        , -1.99999809])]
+# [2, 3.999998092649548, 4.76837158203125e-07, array([ 2.        , -1.99999905])]
+# [3, 3.9999999999972715, 4.76837158203125e-07, array([ 2., -2.])]
+# [4, 4.000001907345904, 4.76837158203125e-07, array([ 2.        , -2.00000095])]
+# [5, 4.000003814695447, 4.76837158203125e-07, array([ 2.        , -2.00000191])]
+# [6, 4.000005722045898, 4.76837158203125e-07, array([ 2.        , -2.00000286])]
+# [7, 4.00000762939726, 4.76837158203125e-07, array([ 2.        , -2.00000381])]
+# [8, 4.0000095367495305, 4.76837158203125e-07, array([ 2.        , -2.00000477])]
+# [9, 4.000011444102712, 4.76837158203125e-07, array([ 2.        , -2.00000572])]
+# [10, 4.000013351456801, 4.76837158203125e-07, array([ 2.        , -2.00000668])]
+# [996, 4.001894445222076, 4.76837158203125e-07, array([ 2.        , -2.00094722])]
+# [997, 4.001896353474072, 4.76837158203125e-07, array([ 2.        , -2.00094818])]
+# [998, 4.001898261726977, 4.76837158203125e-07, array([ 2.        , -2.00094913])]
+# [999, 4.001900169980791, 4.76837158203125e-07, array([ 2.        , -2.00095008])]
+# [1000, 4.001902078235517, 4.76837158203125e-07, array([ 2.        , -2.00095104])]

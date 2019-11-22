@@ -36,6 +36,7 @@ def backtracking(mu, p_k, x_k, Max_LS_iter=20):
     return alpha
 
 def gradient_descent(x0, epsilon=10 ** -8, N=1000, Max_LS_iter=20, mu=10 ** -4, v=0.9, y=10 ** -4):
+    data = [['iteration', 'norm of gradient', 'step size', 'x_k']]
     k = 0
     x_k = x0
     while (LA.norm(gradient(x_k[0], x_k[1]),2) / (1 + abs(function(x_k[0], x_k[1])))) > epsilon and k <= N:  #figure out gradient information on how to plug stuff into it
@@ -43,16 +44,24 @@ def gradient_descent(x0, epsilon=10 ** -8, N=1000, Max_LS_iter=20, mu=10 ** -4, 
         alpha = backtracking(mu, p_k, x_k)
         x_k = x_k + (alpha * p_k)
         k += 1
+        data.append([k, LA.norm(gradient(x_k[0], x_k[1])), alpha, x_k])
     if k > N:
         print("Number of iterations exceeded limit: ", N)
-        return x_k, function(x_k[0], x_k[1]), k
+        return data
     else:
-        return x_k, function(x_k[0], x_k[1]), k
+        return data
 
 x0 = np.array([-1.2,1])
-
-x_k_out, fx_k, k = gradient_descent(x0)
-
-print("x_k = {}, function at x_k = {}, iterations = {}".format(x_k_out,fx_k, k))
+data = gradient_descent(x0)
+if len(data) > 15:
+    a = data[0:11]
+    a.extend(data[len(data) - 6:len(data) - 1])
+    for item in a:
+        print(item)
+else:
+    for item in data:
+        print(item)
 #output
-# x_k = [-3.93452837e+09  9.17576100e+06], function at x_k = -2.396462970737467e+40, iterations = 2
+# ['iteration', 'norm of gradient', 'step size', 'x_k']
+# [1, 3934539279.628693, 1, array([214.4,  89. ])]
+# [2, 2.436340773593038e+31, 1, array([-3.93452837e+09,  9.17576100e+06])]
