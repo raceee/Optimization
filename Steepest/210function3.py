@@ -36,7 +36,7 @@ def backtracking(mu, p_k, x_k, Max_LS_iter=20):
     return alpha
 
 def gradient_descent(x0, epsilon=10 ** -8, N=1000, Max_LS_iter=20, mu=10 ** -4, v=0.9, y=10 ** -4):
-    data = [['iteration', 'norm of gradient', 'step size', 'x_k']]
+    data = [['iteration','function at x_k', 'norm of gradient', 'step size', 'x_k']]
     k = 0
     x_k = x0
     while (LA.norm(gradient(x_k[0], x_k[1]),2) / (1 + abs(function(x_k[0], x_k[1])))) > epsilon and k <= N:  #figure out gradient information on how to plug stuff into it
@@ -44,7 +44,7 @@ def gradient_descent(x0, epsilon=10 ** -8, N=1000, Max_LS_iter=20, mu=10 ** -4, 
         alpha = backtracking(mu, p_k, x_k)
         x_k = x_k + (alpha * p_k)
         k += 1
-        data.append([k, LA.norm(gradient(x_k[0], x_k[1])), alpha, x_k])
+        data.append([k,function(x_k[0],x_k[1]),  LA.norm(gradient(x_k[0], x_k[1])), alpha, x_k])
     if k > N:
         print("Number of iterations exceeded limit: ", N)
         return data
@@ -62,6 +62,6 @@ else:
     for item in data:
         print(item)
 #output
-# ['iteration', 'norm of gradient', 'step size', 'x_k']
-# [1, 3934539279.628693, 1, array([214.4,  89. ])]
-# [2, 2.436340773593038e+31, 1, array([-3.93452837e+09,  9.17576100e+06])]
+# ['iteration', 'function at x_k', 'norm of gradient', 'step size', 'x_k']
+# [1, -211299764097.3998, 3934539279.628693, 1, array([214.4,  89. ])]
+# [2, -2.396462970737467e+40, 2.436340773593038e+31, 1, array([-3.93452837e+09,  9.17576100e+06])]

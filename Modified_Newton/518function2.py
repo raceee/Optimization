@@ -33,7 +33,7 @@ def backtracking(mu, p_k, x_k, Max_LS_iter=20):
     return alpha
 
 def modified_newton(x0, epsilon=10 ** -8, N=1000, Max_LS_iter=20, mu=10 ** -4, v=0.9, y=10 ** -4):
-    data = [['iteration', 'norm of gradient', 'step size', 'x_k']]
+    data = [['iteration', 'function at x_k', 'norm of gradient', 'step size', 'x_k']]
     k = 0
     x_k = x0
     h = hessian()
@@ -44,7 +44,7 @@ def modified_newton(x0, epsilon=10 ** -8, N=1000, Max_LS_iter=20, mu=10 ** -4, v
         #Check that hessian is positive definite
         eig_values, eig_vectors = LA.eig(h)
         shape = eig_values.shape
-        print("eig values =",eig_values)
+        print("eig =", eig_values)
         print(np.less_equal(eig_values,0).any())
         if np.less_equal(eig_values,0).any() =='True':
             PD_adjust = abs(np.amin(eig_values)) + 0.01
@@ -57,11 +57,12 @@ def modified_newton(x0, epsilon=10 ** -8, N=1000, Max_LS_iter=20, mu=10 ** -4, v
         x_k = x_k + alpha * p_k
         k += 1
         h = hessian()
-        data.append([k, LA.norm(gradient(x_k[0], x_k[1])), alpha, x_k])
+        data.append([k, function(x_k[0],x_k[1]), LA.norm(gradient(x_k[0],x_k[1])), alpha, x_k])
     return data
 
 x0 = np.array([0,0])
 data = modified_newton(x0)
+print(data)
 if len(data) > 15:
     a = data[0:11]
     a.extend(data[len(data) - 6:len(data) - 1])
@@ -74,5 +75,5 @@ else:
 
 
 # output
-# ['iteration', 'norm of gradient', 'step size', 'x_k']
-# [1, 0.0, 1, array([1., 1.])]
+# ['iteration', 'function at x_k', 'norm of gradient', 'step size', 'x_k']
+# [1, -1.0, 0.0, 1, array([1., 1.])]
